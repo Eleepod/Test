@@ -1,60 +1,99 @@
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
-    <script src="js/tasks.js"></script>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h3>Test project</h3>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/calendar.css">
+</head>
+<body>
+<script src="js/tasks.js"></script>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Test project</h3>
+        </div>
+    </div>
+    <form id="form1">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="task_data">Название напоминания</label>
+                    <input type="text" class="form-control" id="task_data" aria-describedby="taskDataHelp" placeholder="Занятие">
+                    <small id="task_data_help" class="form-text text-muted">Введите название занятия</small>
+                </div>
+                <div class="form-group">
+                    <label for="reminder_date">Когда напомнить</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend" id="calendar_opener" onclick="showCalendar(event)">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                        </div>
+                        <input readonly type="text" class="form-control" id="reminder_date" aria-describedby="reminderDataHelp" placeholder="Напомнить">
+                    </div>
+                    <small id="reminder_date_help" class="form-text text-muted">Введите дату и время напоминания</small>
+                </div>
+
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="important_check">
+                    <label class="form-check-label" for="important_check">Важно</label>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="insertItemToList()">AddTask</button>
+                <button type="button" class="btn btn-light" onclick="clearForm()">Clear</button>
+                <!--button type="reset" class="btn btn-dark">Reset</button-->
+            </div>
+            <div class="col-md-6">
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        <h5 class="card-title">Список дел</h5>
+                        <ul class="list-group" id="task_list"></ul>
+                        <br />
+                        <a href="#" class="btn btn-primary" onclick="clearTasks()">Clear</a>
+                    </div>
                 </div>
             </div>
-            <form id="form1">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="task_data">Название напоминания</label>
-                            <input type="text" class="form-control" id="task_data" aria-describedby="taskDataHelp" placeholder="Занятие">
-                            <small id="task_data_help" class="form-text text-muted">Введите название занятия</small>
-                        </div>
-                            <div class="form-group">
-                                <label for="reminder_date">Когда напомнить</label>
-                                <div class="row">
-                                    <div class="col-md-11">
-                                        <input type="text" class="form-control" id="reminder_date" aria-describedby="reminderDataHelp" placeholder="Напомнить">
-                                    </div>
-                                    <div class="col-xs-1">
-                                        <button type="button" class="btn btn-light" id="calendar_button" onclick="openCalendar()"><i class="fas fa-calendar-alt"></i> </button>
-                                    </div>
-                                </div>
-                                <small id="reminder_date_help" class="form-text text-muted">Введите дату и время напоминания</small>
-                            </div>
-
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="important_check">
-                            <label class="form-check-label" for="important_check">Важно</label>
-                        </div>
-                        <button type="button" class="btn btn-primary" onclick="insertItemToList()">AddTask</button>
-                        <button type="button" class="btn btn-light" onclick="clearForm()">Clear</button>
-                        <!--button type="reset" class="btn btn-dark">Reset</button-->
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card" style="width: 100%;">
-                            <div class="card-body">
-                                <h5 class="card-title">Список дел</h5>
-                                <ul class="list-group" id="task_list"></ul>
-                                <br />
-                                <a href="#" class="btn btn-primary" onclick="clearTasks()">Clear</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="main_content"></div>
-            </form>
         </div>
-    </body>
+        <div id="main_content"></div>
+    </form>
+</div>
+<div id="calendar" class="calendar" style="display:none">
+    <div class="header_wrap">
+        <div id="calendar_header" class="header">
+            <p>Text Content</p>
+        </div>
+        <div class="arrows">
+            <div id="calendar_left_arrow" class="arrows_left"><i class="fa fa-angle-left"></i></div>
+            <div id="calendar_right_arrow" class="arrows_right"><i class="fa fa-angle-right"></i></div>
+        </div> <!-- END OF arrows -->
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>Пн</th>
+            <th>Вт</th>
+            <th>Ср</th>
+            <th>Чт</th>
+            <th>Пт</th>
+            <th>Сб</th>
+            <th>Вс</th>
+        </tr>
+        </thead>
+        <tbody id="calendar_table"></tbody>
+        <!--
+        <tr>
+            <td class="not_current">1</td>
+            <td class="today">2</td>
+            <td>3</td>
+            <td>10</td>
+            <td>11</td>
+            <td>12</td>
+            <td>13</td>
+        </tr>
+        -->
+    </table>
+    <hr>
+    <div class="btn-group">
+        <input type="button" onclick="hideCalendar(event)" value="Отмена" class="btn btn-sm btn-outline-secondary">
+    </div>
+</div> <!-- END OF CALENDAR -->
+</body>
 </html>
