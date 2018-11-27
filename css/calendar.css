@@ -121,6 +121,11 @@
     color: #ffffff !important;
     font-weight: bold;
 }
+.calendar table td.chosen{
+    background-color: #434dfc !important;
+    color: #ffffff !important;
+    font-weight: bold;
+}
 #calendar_opener{
     cursor: pointer !important;
 }

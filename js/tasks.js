@@ -5,6 +5,8 @@ const STATE = {
     calendar: 'calendar',
     calendarDate: new Date(),
     showCalendar: false,
+    //TODO может запоминать выбранную дату и закрашивать ее при листании месяцев, а так же открывать календарь с позицианированием на выбранной дате??
+    chosen: null,
 };
 
 document.addEventListener("DOMContentLoaded",function () {
@@ -21,9 +23,13 @@ document.addEventListener("DOMContentLoaded",function () {
 });
 
 document.body.addEventListener('click', function(event){
-    let calendarPosition = document.getElementById('calendar').getBoundingClientRect();
-    if (calendarPosition.bottom >= event.clientY && calendarPosition.top <= event.clientY &&
-        calendarPosition.left <= event.clientX && calendarPosition.right >= event.clientX) {
+    // let calendarPosition = document.getElementById('calendar').getBoundingClientRect();
+    // if (calendarPosition.bottom >= event.clientY && calendarPosition.top <= event.clientY &&
+    //     calendarPosition.left <= event.clientX && calendarPosition.right >= event.clientX) {
+    //     event.stopPropagation();
+    //     return 0;
+    // }
+    if (event.target.closest('#calendar')) {
         event.stopPropagation();
         return 0;
     }
@@ -253,7 +259,10 @@ function calendarDateClick(event) {
     let month = STATE.calendarDate.getMonth() + Number(event.target.getAttribute('data-month-shift'));
     let day = Number(event.target.innerText);
     let chosenDate = new Date(year, month, day);
+    STATE.chosen ? STATE.chosen.classList.remove('chosen') : null;
+    event.target.classList.add('chosen');
     document.getElementById('reminder_date').value = chosenDate.toLocaleString('ru',{day : 'numeric', month: 'long', year: 'numeric'});
+    STATE.chosen = event.target;
 }
 
 function calendarSwitchMonth(shift) {
