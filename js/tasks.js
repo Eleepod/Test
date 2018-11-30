@@ -10,7 +10,7 @@ const STATE = {
 };
 
 document.addEventListener("DOMContentLoaded",function () {
-    buildCalendar();
+    //buildCalendar();
     initTaskContainer();
     document.getElementById('calendar_left_arrow').addEventListener('click', function (event) {
         event.stopPropagation();
@@ -167,6 +167,7 @@ function showCalendar(event) {
     if( STATE.showCalendar) {
         return false;
     }
+    buildCalendar();
 
     let calendar = document.getElementById(STATE.calendar);
     let button = document.getElementById('calendar_opener').getBoundingClientRect();
@@ -185,6 +186,7 @@ function hideCalendar(event) {
     }
     calendar.style.display = "none";
     STATE.showCalendar = false;
+    STATE.calendarDate = new Date();
     return true;
 }
 

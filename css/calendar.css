@@ -8,6 +8,7 @@
     border-radius: 3px;
     color: #616682;
     z-index: 1000;
+    user-select: none;
 }
 
 .calendar .header_wrap {
