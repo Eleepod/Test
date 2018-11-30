@@ -7,6 +7,7 @@ const STATE = {
     showCalendar: false,
     //TODO может запоминать выбранную дату и закрашивать ее при листании месяцев, а так же открывать календарь с позицианированием на выбранной дате??
     chosen: null,
+    chosenDate: null,
 };
 
 document.addEventListener("DOMContentLoaded",function () {
@@ -201,69 +202,52 @@ function buildCalendar() {
     //calendarAddHeaders(calendar);
 
     let today = new Date();
-    let todayInThisMonth = today.getFullYear() === year && today.getMonth() === month;
-    let todayMonthDifference = today.getMonth() - month + (today.getFullYear() - year) * 12;
-    let todayDate = today.getDate();
-    let monthData = getMonthData(year, month);
+    today.setHours(0,0,0,0);
     let weekCounter = 1; //счетчик недель
-    let dayCounter = 1;
 
-    let lastDayOfPreviousMonth = getLastDayOfMonth(monthData.year,monthData.month - 1);
+    let firstDayOfMonth = new Date(year,month,1);
+    let shiftToMonday = !firstDayOfMonth.getDay() ? 7 : firstDayOfMonth.getDay();
+    let currentDay = new Date(firstDayOfMonth -  (shiftToMonday - 1) * 24 * 60 * 60 * 1000);
+
     while (weekCounter < 7) {
         let tr = document.createElement("tr");
-        for (let i = 1; i < 8; i++) {
+        for (let i = 0; i < 7; i++) {
             let td = document.createElement("td");
-            let currentDay = dayCounter;
-            if (weekCounter === 1 && monthData.firstDayWeek > i) {
-                currentDay = lastDayOfPreviousMonth - monthData.firstDayWeek + i + 1;
+            td.setAttribute('data-date',"" + currentDay.getTime());
+            if (currentDay < today) {
+                td.classList.add('not_allowed');
+            }
+            if (currentDay.getMonth() !== month) {
                 td.classList.add('not_current');
-                if (todayMonthDifference >= 0) {
-                    td.classList.add('not_allowed');
-                }
-                td.setAttribute('data-month-shift',"-1");
             }
-            else if (dayCounter > monthData.lastDay) {
-                currentDay = dayCounter - monthData.lastDay;
-                td.classList.add('not_current');
-                if (todayMonthDifference > 0) {
-                    td.classList.add('not_allowed');
-                }
-                td.setAttribute('data-month-shift',"1");
-                dayCounter++;
+            if (currentDay.getTime() === today.getTime()) {
+                td.classList.add('today');
             }
-            else {
-
-                if (todayInThisMonth && dayCounter === todayDate) {
-                    td.classList.add('today');
-                }
-                if (todayMonthDifference > 0 || todayMonthDifference === 0 && currentDay < todayDate) {
-                    td.classList.add('not_allowed');
-                }
-                td.setAttribute('data-month-shift',"0");
-                dayCounter++;
+            if (STATE.chosenDate && STATE.chosenDate.getTime() === currentDay.getTime()) {
+                td.classList.add('chosen');
+                STATE.chosen = td;
             }
-            td.innerText = "" + currentDay;
+            td.innerText = "" + currentDay.getDate();
             if (!td.classList.contains('not_allowed')) {
                 td.onclick = calendarDateClick;
             }
             tr.appendChild(td);
+            currentDay.setDate(currentDay.getDate() + 1);
         }
         calendar.appendChild(tr);
-        if (dayCounter > monthData.lastDay) { //в феврале может быть 4 недели
+        if (currentDay.getMonth() !== month) { //в феврале может быть 4 недели
             break;
         }
         weekCounter++;
     }
+    document.getElementById('calendar').style.height = 400 - (6 - weekCounter) * 40;
 }
 
 function calendarDateClick(event) {
-    let year = STATE.calendarDate.getFullYear();
-    let month = STATE.calendarDate.getMonth() + Number(event.target.getAttribute('data-month-shift'));
-    let day = Number(event.target.innerText);
-    let chosenDate = new Date(year, month, day);
+    STATE.chosenDate = new Date(Number(event.target.getAttribute('data-date')));
     STATE.chosen ? STATE.chosen.classList.remove('chosen') : null;
     event.target.classList.add('chosen');
-    document.getElementById('reminder_date').value = chosenDate.toLocaleString('ru',{day : 'numeric', month: 'long', year: 'numeric'});
+    document.getElementById('reminder_date').value = STATE.chosenDate.toLocaleString('ru',{day : 'numeric', month: 'long', year: 'numeric'});
     STATE.chosen = event.target;
 }
 
