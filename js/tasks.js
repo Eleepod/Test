@@ -187,7 +187,7 @@ function hideCalendar(event) {
     }
     calendar.style.display = "none";
     STATE.showCalendar = false;
-    STATE.calendarDate = new Date();
+    STATE.calendarDate = STATE.chosenDate ? STATE.chosenDate : new Date();
     return true;
 }
 
