@@ -5,7 +5,6 @@ const STATE = {
     calendar: 'calendar',
     calendarDate: new Date(),
     showCalendar: false,
-    //TODO может запоминать выбранную дату и закрашивать ее при листании месяцев, а так же открывать календарь с позицианированием на выбранной дате??
     chosen: null,
     chosenDate: null,
 };
